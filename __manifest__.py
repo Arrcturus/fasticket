@@ -3,10 +3,21 @@
     'name': "fasticket",
 
     'summary': """
-        Plantilla Arthur: Resumen en una frase/línea de lo que hace el módulo""",
+        Módulo para la gestión de eventos y venta de entradas""",
 
     'description': """
-        Plantilla Arthur: Descripción larga de lo que hace el módulo
+        Este módulo permite gestionar eventos y la venta de entradas de manera eficiente.
+        Incluye funcionalidades para crear eventos, gestionar entradas, y realizar ventas.
+        Además, permite la gestión de estados de eventos y entradas.
+        Funcionalidades:
+        - Crear y gestionar eventos
+        - Crear y gestionar entradas
+        - Realizar ventas de entradas
+        - Gestión de estados de eventos y entradas
+        - Validaciones para entradas y eventos
+        - Reportes de ventas y entradas
+        - Integración con el sistema de Odoo
+        - Interfaz de usuario amigable
     """,
 
     'author': "Arthur",
@@ -16,7 +27,7 @@
     # Check https://github.com/odoo/odoo/blob/16.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '0.2',
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
@@ -24,8 +35,8 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+        'views/ticket.xml',
+        'views/event.xml',
         'views/restart.xml',
         'views/menu.xml',
         # El menú siempre va abajo del todo
