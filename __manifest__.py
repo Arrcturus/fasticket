@@ -30,14 +30,16 @@
     'version': '0.2',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'mail', 'website', 'website_sale', 'event', 'website_event', 'stock'],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'wizards/event_link_wizard_view.xml',
         'views/ticket.xml',
         'views/event.xml',
         'views/restart.xml',
+        'views/website_templates.xml',
         'views/menu.xml',
         # El menú siempre va abajo del todo
     ],

@@ -1,0 +1,147 @@
+<odoo>
+    <data>
+        <template id="fasticket_events" name="FasTicket Eventos">
+            <t t-call="website.layout">
+                <div class="container mt16 mb16">
+                    <h1>Eventos Disponibles</h1>
+                    <div class="row mt16">
+                        <t t-foreach="events" t-as="event">
+                            <div class="col-md-4 mb16">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title" t-esc="event.name"/>
+                                        <p class="card-text">
+                                            <strong>Fecha:</strong> <span t-field="event.date"/>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <!-- Si el evento está vinculado a un evento Odoo, usa su URL -->
+                                        <t t-if="event.odoo_event_id">
+                                            <a t-att-href="'/event/%s/register' % event.odoo_event_id.id" class="btn btn-primary">
+                                                Registro Oficial
+                                            </a>
+                                        </t>
+                                        <!-- En cualquier caso, muestra nuestros detalles personalizados -->
+                                        <a t-att-href="'/fasticket/event/%s' % event.id" class="btn btn-secondary ml-2">
+                                            Ver Detalles
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+        <template id="fasticket_event_detail" name="FasTicket Detalle Evento">
+            <t t-call="website.layout">
+                <div class="container mt16 mb16">
+                    <h1 t-field="event.name"/>
+                    <div class="row mt16">
+                        <div class="col-lg-8">
+                            <div class="card mb16">
+                                <div class="card-body">
+                                    <h3>Detalles</h3>
+                                    <p t-field="event.description"/>
+                                    <hr/>
+                                    <p><strong>Fecha:</strong> <span t-field="event.date"/></p>
+                                    <p><strong>Ubicación:</strong> <span t-field="event.location"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3>Entradas Disponibles</h3>
+                                </div>
+                                <div class="card-body">
+                                    <t t-if="not tickets">
+                                        <p>No hay entradas disponibles</p>
+                                    </t>
+                                    <t t-foreach="tickets" t-as="ticket">
+                                        <div class="mb-4 pb-3 border-bottom">
+                                            <h5 t-field="ticket.name"/>
+                                            <p>Precio: <span t-field="ticket.price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/></p>
+                                            <p>Disponibles: <span t-field="ticket.left"/></p>
+                                            
+                                            <!-- Si el ticket tiene producto relacionado, muestra botón para compra -->
+                                            <t t-if="ticket.product_id and ticket.product_id.website_published">
+                                                <a t-att-href="'/shop/product/%s' % ticket.product_id.id" class="btn btn-primary">
+                                                    Comprar
+                                                </a>
+                                            </t>
+                                            
+                                            <!-- Si hay evento Odoo relacionado, muestra botón para registro -->
+                                            <t t-elif="event.odoo_event_id">
+                                                <a t-att-href="'/event/%s/register' % event.odoo_event_id.id" class="btn btn-secondary">
+                                                    Registro
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Añadir al final de website_templates.xml -->
+        <template id="ticket_purchase_form" name="Compra de Ticket">
+            <t t-call="website.layout">
+                <div class="container mt32 mb32">
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <div class="card">
+                                <div class="card-header bg-primary text-white">
+                                    <h3>Comprar Entradas</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-4">
+                                        <div class="col-md-6">
+                                            <h5>Evento:</h5>
+                                            <p t-field="ticket.event_id.name"></p>
+                                            <p><strong>Fecha:</strong> <span t-field="ticket.event_id.date"/></p>
+                                            <p><strong>Ubicación:</strong> <span t-field="ticket.event_id.location"/></p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h5>Ticket:</h5>
+                                            <p t-field="ticket.name"></p>
+                                            <p><strong>Precio:</strong> <span t-field="ticket.price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/></p>
+                                            <p><strong>Disponibles:</strong> <span t-field="ticket.left"/></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <form t-att-action="'/fasticket/comprar_ticket/%s' % ticket.id" method="post">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <div class="form-group">
+                                            <label for="quantity">Cantidad:</label>
+                                            <select name="quantity" class="form-control" style="max-width: 100px;">
+                                                <t t-foreach="range(1, min(10, ticket.left + 1))" t-as="i">
+                                                    <option t-att-value="i" t-esc="i"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3">
+                                            Continuar con la compra
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        
+        <!-- Añadir enlace al menú principal del sitio web -->
+        <record id="menu_fasticket_events" model="website.menu">
+            <field name="name">FasTicket Eventos</field>
+            <field name="url">/fasticket/events</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">50</field>
+        </record>
+    </data>
+</odoo>

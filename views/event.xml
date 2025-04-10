@@ -37,7 +37,8 @@
                                         <span>Etiqueta izquierda</span>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <button name="btn" type="button" class="btn btn-primary">Acción</button>
+                                        <button name="btn" type="button" class="btn btn-primary">
+                                            Acción</button>
                                     </div>
                                 </div>
                             </div>
@@ -67,6 +68,13 @@
                                 <field name="date" />
                                 <field name="location" />
                                 <field name="description" />
+                                <field name="state" />
+                            </group>
+                        </group>
+                        <group name="group_bottom">
+                            <group name="group_left">
+                                <field name="ticket_ids" widget="one2many_list"
+                                    options="{'no_create': True}" />
                             </group>
                         </group>
                     </sheet>
@@ -74,6 +82,55 @@
             </field>
         </record>
 
+        <!-- Hereda la vista de evento existente -->
+        <record id="view_fasticket_event_form_inherit" model="ir.ui.view">
+            <field name="name">fasticket.event.form.inherit</field>
+            <field name="model">fasticket.event</field>
+            <field name="inherit_id" ref="fasticket.event_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <button string="Ver en Website Events" 
+                                name="action_view_odoo_event" 
+                                type="object" 
+                                class="oe_highlight"
+                                attrs="{'invisible': [('odoo_event_id', '=', False)]}"
+                        />
+                        <button string="Vincular con Website Events" 
+                                name="action_link_to_odoo_event" 
+                                type="object" 
+                                attrs="{'invisible': [('odoo_event_id', '!=', False)]}"
+                        />
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                </xpath>
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="odoo_event_id" readonly="1" attrs="{'invisible': [('odoo_event_id', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Vista de formulario para el asistente -->
+        <record id="view_event_link_wizard_form" model="ir.ui.view">
+            <field name="name">fasticket.event.link.wizard.form</field>
+            <field name="model">fasticket.event.link.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="event_id" readonly="1"/>
+                            <field name="create_new"/>
+                            <field name="odoo_event_id" attrs="{'required': [('create_new', '=', False)], 'invisible': [('create_new', '=', True)]}"/>
+                            <field name="create_tickets" attrs="{'invisible': [('create_new', '=', False), ('odoo_event_id', '=', False)]}"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Vincular" name="action_link" type="object" class="btn-primary"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
         <!-- actions opening views on models -->
 

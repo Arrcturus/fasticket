@@ -1,2 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_fasticket_fasticket,fasticket.fasticket,model_fasticket_fasticket,base.group_user,1,1,1,1
+access_fasticket_event,fasticket.event,model_fasticket_event,base.group_user,1,1,1,1
+access_fasticket_ticket,fasticket.ticket,model_fasticket_ticket,base.group_user,1,1,1,1
+access_fasticket_restart,fasticket.restart,model_fasticket_restart,base.group_system,1,1,1,1
+access_fasticket_event_link_wizard,fasticket.event.link.wizard,model_fasticket_event_link_wizard,base.group_user,1,1,1,0
+access_fasticket_event_public,fasticket.event.public,model_fasticket_event,base.group_public,1,0,0,0
+access_fasticket_ticket_public,fasticket.ticket.public,model_fasticket_ticket,base.group_public,1,0,0,0
