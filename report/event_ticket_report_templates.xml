@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Create a new event ticket report template instead of inheriting -->
+        <template id="fasticket_event_registration_report_template_badge">
+            <t t-name="fasticket.event_registration_report_template_badge">
+                <main>
+                    <div class="o_event_badge_report_container">
+                        <t t-foreach="docs" t-as="attendee">
+                            <div class="page">
+                                <div class="oe_structure"/>
+                                <div class="o_event_registration_badge">
+                                    <!-- Ticket Header -->
+                                    <div class="o_event_registration_badge_header">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <h3 t-field="attendee.event_id.name"/>
+                                                <h4 t-field="attendee.event_id.date_begin" t-options="{'widget': 'datetime', 'format': 'EEEE dd MMMM yyyy'}"/>
+                                                <h5 t-if="attendee.event_id.address_id">
+                                                    <t t-esc="attendee.event_id.address_id.name"/><br/>
+                                                    <span t-field="attendee.event_id.address_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
+                                                </h5>
+                                            </div>
+                                            <div class="col-6 text-right">
+                                                <img t-if="attendee.event_id.company_id.logo" 
+                                                    t-att-src="image_data_uri(attendee.event_id.company_id.logo)" 
+                                                    style="max-height: 100px; max-width: 180px;" alt="Company Logo"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Ticket Body -->
+                                    <div class="o_event_registration_badge_body">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <div class="mb-4">
+                                                    <h3 class="mb-0" t-field="attendee.name"/>
+                                                    <p t-if="attendee.email" t-field="attendee.email"/>
+                                                    <p t-if="attendee.phone" t-field="attendee.phone"/>
+                                                </div>
+                                                
+                                                <div class="mb-4">
+                                                    <strong>Ticket Type:</strong>
+                                                    <span t-field="attendee.event_ticket_id.name"/>
+                                                </div>
+                                                
+                                                <div>
+                                                    <strong>Reference:</strong>
+                                                    <span t-field="attendee.id"/>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- QR Code Section -->
+                                            <div class="col-4 text-center">
+                                                <!-- Generate QR code with attendee ID and name -->
+                                                <img class="o_event_registration_badge_qr" 
+                                                    t-att-src="'/report/barcode/?type=QR&amp;value=%s&amp;width=180&amp;height=180' % attendee.id" 
+                                                    style="width: 180px; height: 180px;"/>
+                                                <p class="text-center">Scan for validation</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Ticket Footer -->
+                                    <div class="o_event_registration_badge_footer">
+                                        <div class="text-center">
+                                            <p>This ticket admits one person to the event.</p>
+                                            <p>Please bring a printed copy or show on your mobile device.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </main>
+            </t>
+        </template>
+
+        <!-- Add a report action that uses our template -->
+        <report
+            id="action_report_event_registration_badge"
+            model="event.registration"
+            string="Event Ticket"
+            report_type="qweb-pdf"
+            name="fasticket.fasticket_event_registration_report_template_badge"
+            file="fasticket.fasticket_event_registration_report_template_badge"
+            print_report_name="'Event Ticket - %s' % (object.name or 'Attendee')"
+            paperformat="base.paperformat_euro"/>
+    </data>
+</odoo>

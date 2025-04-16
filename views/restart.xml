@@ -1,0 +1,35 @@
+<odoo>
+  <data>
+
+    <!--Acción reset-->
+    <record id="action_restart_odoo" model="ir.actions.server">
+      <field name="name">Reiniciar Odoo</field>
+      <field name="model_id" ref="fasticket.model_fasticket_restart"/>
+      <field name="state">code</field>
+      <field name="code">model.env['fasticket.restart'].do_restart()</field>
+    </record>
+
+    <!--Acción actualización--> 
+    <record id="action_update_fasticket" model="ir.actions.server">
+      <field name="name">Actualizar my_model</field>
+      <field name="model_id" ref="base.model_ir_module_module"/>
+      <field name="binding_model_id" ref="base.model_ir_module_module"/>
+      <field name="state">code</field>
+      <field name="code">
+          action = env['ir.module.module'].search([('name', '=', 'fasticket')]).button_immediate_upgrade()
+      </field>
+    </record>
+
+
+    <!--Elemento menú-->
+    <menuitem id="menu_reset_odoo"
+          name="Reiniciar Odoo "
+          action="action_restart_odoo"
+          sequence="8"/>
+
+    <menuitem id="menu_update_fasticket"
+          name="Actualizar fasticket"
+          action="action_update_fasticket"
+          sequence="9"/>
+  </data>
+</odoo>

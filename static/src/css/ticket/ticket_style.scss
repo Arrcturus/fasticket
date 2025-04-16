@@ -1,0 +1,33 @@
+.o_event_registration_badge {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    border: 1px dashed #cccccc;
+    page-break-inside: avoid;
+    
+    .o_event_registration_badge_header {
+        border-bottom: 2px solid #f1f1f1;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .o_event_registration_badge_body {
+        min-height: 200px;
+        padding: 15px 0;
+    }
+    
+    .o_event_registration_badge_qr {
+        border: 5px solid #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .o_event_registration_badge_footer {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 2px solid #f1f1f1;
+        font-size: 0.9rem;
+        color: #777777;
+    }
+}

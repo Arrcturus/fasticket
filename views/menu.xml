@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+    <!--
+        <menuitem id="menu_fasticket_root"
+            name="Mi modulo"
+            sequence="10" />
+
+        <menuitem id="menu_mi_modelo_root"
+            name="Mi Modelo"
+            parent="menu_fasticket_root"
+            sequence="1" />
+
+        <menuitem id="menu_mi_modelo_template"
+            name="Mi Modelo"
+            parent="menu_mi_modelo_root"
+            sequence="1"
+            action="mi_modelo_action_window" />
+
+        <menuitem id="menu_mi_modelo1_template"
+            name="Ciudades"
+            parent="menu_mi_modelo_root"
+            sequence="2"
+            action="mi_modelo1_action_window" />
+    -->
+    </data>
+</odoo>
