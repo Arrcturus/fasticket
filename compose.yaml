@@ -1,0 +1,67 @@
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - portainer
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: always
+
+  odoo:
+    image: odoo:16
+    container_name: odoo16
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - SMTP_SERVER=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_SSL=${SMTP_SSL}
+      - EMAIL_FROM=${EMAIL_FROM}
+    depends_on:
+      - db
+    ports:
+      - "8069:8069" # Accede a odoo en http://localhost:8069
+    volumes:
+      # Monta la carpeta de addons desde la ruta absoluta en tu sistema
+      - /mnt/extra-addons:/mnt/extra-addons
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "8082:80" # Accede a pgAdmin en http://localhost:8082
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    restart: always
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    ports:
+      - "9000:9000" # Opcional: Accede a Portainer en http://localhost:9000
+      - "8000:8000" # Accede a Portainer en https://localhost:8000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Necesario para gestionar Docker
+      - portainer_data:/data
+    restart: always
+
+volumes:
+  db_data:
+  pgadmin_data:
+  portainer_data:

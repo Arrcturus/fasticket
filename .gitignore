@@ -1,0 +1,3 @@
+# Hay que poner el archivo .env en un directorio diferente al de la aplicación junto al docker-compose
+# Por si acaso, lo incluimos en el .gitignore
+.env

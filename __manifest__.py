@@ -31,15 +31,25 @@
         'views/views.xml',
         'views/templates.xml',
         'views/restart.xml',
-        'views/menu.xml',
         'report/event_ticket_report_templates.xml',
+        #'data/mail_config_data.xml',
+        'views/menu.xml',
         # El menú siempre va abajo del todo
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
-    
+
+    'pip': [
+        'qrcode'
+    ],
+
+    # Pre init hook
+    'pre_init_hook': 'pre_hook_function',
+
+    # post init hook (corrected)
+    'post_init_hook': 'run_post_init_hooks',
 
     'assets': {
         'web.assets_backend': [
