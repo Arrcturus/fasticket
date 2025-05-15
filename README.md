@@ -1,63 +1,211 @@
-# Fasticket - Gestión de Eventos y Entradas para Odoo 16
+# Fasticket - Gestión de Eventos y Entradas con Códigos QR para Odoo 16
 
-## Resumen
+![Fasticket Logo](static/description/icon.png)
 
-Fasticket es un módulo para Odoo 16 diseñado para simplificar la gestión de eventos y la venta/validación de entradas. Permite crear eventos, configurar diferentes tipos de entradas, generar códigos QR únicos para cada asistente y validar dichos códigos.
+## Descripción
 
-## Funcionalidades Principales
+Fasticket es un módulo integrado para Odoo 16 que moderniza la gestión de eventos y entradas. Permite crear eventos, generar entradas con códigos QR únicos, enviar confirmaciones por correo electrónico y validar la asistencia mediante escaneo de códigos QR.
 
-*   **Gestión de Eventos:** Creación y configuración de eventos (fechas, ubicación, etc.) integrado con el módulo `website_event` de Odoo.
-*   **Gestión de Entradas:** Definición de diferentes tipos de entradas para cada evento.
-*   **Registro de Asistentes:** Gestión de las inscripciones de los asistentes a los eventos.
-*   **Generación de Códigos QR:** Cada entrada de asistente genera automáticamente un código QR único que contiene la información necesaria para su validación.
-*   **Plantilla de Ticket PDF:** Incluye una plantilla de informe QWeb para imprimir/descargar las entradas en formato PDF, mostrando la información del evento, del asistente y el código QR.
-*   **Validación de QR (XML-RPC):** Proporciona un método en el modelo `event.registration` que puede ser llamado vía XML-RPC para validar un código QR y registrar la asistencia.
-*   **Plantillas de Correo Personalizadas:** Actualiza las plantillas de correo electrónico estándar de eventos de Odoo para incluir el ticket con el código QR como adjunto.
-*   **Configuración SMTP Dinámica:** Configura el servidor de correo saliente y el remitente por defecto de Odoo utilizando variables de entorno, ideal para despliegues con Docker. Esto se realiza mediante un `post_init_hook` para mantener las credenciales seguras y fuera del código fuente.
-*   **Instalación de Dependencias:** Utiliza un `pre_init_hook` para instalar automáticamente las dependencias Python listadas en la clave `pip` del `__manifest__.py` (como `qrcode`).
+## Características Principales
 
-## Instalación y Configuración
+- **📅 Gestión completa de eventos**: Integración perfecta con el módulo `website_event` de Odoo
+- **🎟️ Entradas personalizables**: Define diferentes tipos de entradas para cada evento
+- **🔄 Registro automatizado**: Gestión simplificada de las inscripciones
+- **📱 Códigos QR únicos**: Generación automática de códigos QR para cada entrada
+- **📄 Tickets en PDF**: Plantilla profesional para las entradas, con información del evento y código QR
+- **✅ Validación por escaneo**: API XML-RPC para validar entradas mediante escaneo de códigos QR
+- **📧 Correos personalizados**: Plantillas de correo electrónico con tickets adjuntos
+- **⚙️ Configuración SMTP automática**: Configuración del servidor de correo mediante variables de entorno
+- **📦 Instalación sin complicaciones**: Dependencias Python instaladas automáticamente
 
-1.  **Clonar el Repositorio:** Clona este repositorio o copia la carpeta `fasticket` dentro de tu directorio de addons personalizados de Odoo.
-2.  **Dependencias:** Asegúrate de que el módulo `website_event` de Odoo esté instalado. La dependencia Python `qrcode` se instalará automáticamente al instalar el módulo `fasticket` gracias al `pre_init_hook`.
-3.  **Actualizar Lista de Aplicaciones:** Reinicia tu servidor Odoo y actualiza la lista de aplicaciones (activando el modo desarrollador si es necesario).
-4.  **Instalar Módulo:** Busca "Fasticket" en la lista de aplicaciones e instálalo.
+## Requisitos
 
-## Configuración de Docker (Ejemplo)
+- Odoo 16.0
+- Módulo `website_event` instalado
+- Acceso a servidor SMTP para el envío de correos (opcional, pero recomendado)
 
-Este módulo está pensado para funcionar bien en un entorno Dockerizado usando Docker Compose.
+## Instalación
 
-*   **`compose.yaml`:** Define los servicios necesarios (Odoo, PostgreSQL, etc.) y monta el directorio de addons personalizados (incluyendo `fasticket`) dentro del contenedor de Odoo. También pasa las variables de entorno necesarias al servicio de Odoo. Puedes encontrar un archivo `compose.yaml` de ejemplo en la raíz de este repositorio (o donde lo hayas colocado).
-*   **`.env`:** Este archivo contiene las variables de entorno sensibles, como las credenciales de la base de datos y, crucialmente, las credenciales SMTP (`SMTP_SERVER`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_FROM`, `SMTP_SSL`).
+1. **Clonar o descargar el módulo**
+   ```bash
+   git clone https://github.com/tu-usuario/fasticket.git /ruta/a/addons/fasticket
+   ```
+   
+2. **Añadir al path de addons de Odoo**
+   - Añade la ruta al directorio donde has clonado/descargado el módulo en tu archivo de configuración de Odoo (`odoo.conf`):
+     ```
+     addons_path = /ruta/original/addons,/ruta/a/addons
+     ```
 
-**Ubicación de los Archivos Docker:**
+3. **Reiniciar Odoo y actualizar la lista de aplicaciones**
+   - Reinicia el servidor Odoo
+   - En modo desarrollador, actualiza la lista de aplicaciones (Ajustes > Actualizar Lista de Aplicaciones)
 
-*   Se recomienda colocar los archivos `compose.yaml` y `.env` en una **carpeta personal fuera del directorio del módulo `fasticket`**. Por ejemplo, en una carpeta raíz del proyecto desde donde ejecutes `docker compose up`.
-*   El archivo `compose.yaml` **puede ser incluido** en tu repositorio de GitHub como referencia de configuración.
-*   El archivo `.env` **NUNCA debe ser subido a GitHub** ni a ningún otro repositorio público, ya que contiene información sensible (contraseñas). Asegúrate de incluir `.env` en tu archivo `.gitignore`.
+4. **Instalar el módulo**
+   - Busca "Fasticket" en la lista de aplicaciones e instálalo
 
-**Ejemplo de Variables en `.env` para SMTP:**
+## Configuración
 
-```dotenv
-# PostgreSQL Credentials
-POSTGRES_USER=odoo
-POSTGRES_PASSWORD=tu_contraseña_segura
+### Configuración Manual
 
-# SMTP Configuration (Usadas por el post_init_hook de Fasticket)
-EMAIL_FROM=tu_email_remitente@example.com
-SMTP_SERVER=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=tu_usuario_smtp@example.com
-SMTP_PASSWORD=tu_contraseña_smtp
-SMTP_SSL=False # O True si usas SSL/TLS directo (ej. puerto 465)
+1. **Servidor de correo**
+   - Ve a Ajustes > Técnico > Correo electrónico > Servidores de Correo Saliente
+   - Configura tu servidor SMTP para el envío de entradas por correo
+
+2. **Plantillas de correo**
+   - Las plantillas se actualizan automáticamente durante la instalación para incluir los tickets con QR
+
+### Configuración con Docker
+
+Para entornos Docker, el módulo puede configurarse automáticamente mediante variables de entorno:
+
+1. **Archivo `compose.yaml`** (ejemplo):
+   ```yaml
+   version: '3.8'
+   services:
+     odoo:
+       image: odoo:16
+       depends_on:
+         - db
+       ports:
+         - "8069:8069"
+       volumes:
+         - ./addons:/mnt/extra-addons
+       environment:
+         - HOST=db
+         - USER=${POSTGRES_USER}
+         - PASSWORD=${POSTGRES_PASSWORD}
+         # Variables para configuración SMTP
+         - SMTP_SERVER=${SMTP_SERVER}
+         - SMTP_PORT=${SMTP_PORT}
+         - SMTP_USER=${SMTP_USER}
+         - SMTP_PASSWORD=${SMTP_PASSWORD}
+         - EMAIL_FROM=${EMAIL_FROM}
+         - SMTP_SSL=${SMTP_SSL}
+     
+     db:
+       image: postgres:13
+       environment:
+         - POSTGRES_DB=postgres
+         - POSTGRES_USER=${POSTGRES_USER}
+         - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+       volumes:
+         - odoo-db-data:/var/lib/postgresql/data
+   
+   volumes:
+     odoo-db-data:
+   ```
+
+2. **Archivo `.env`** (ejemplo):
+   ```dotenv
+   # PostgreSQL
+   POSTGRES_USER=odoo
+   POSTGRES_PASSWORD=myodoopassword
+   
+   # SMTP
+   EMAIL_FROM=noreply@miempresa.com
+   SMTP_SERVER=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USER=micorreo@gmail.com
+   SMTP_PASSWORD=micontraseña
+   SMTP_SSL=False
+   ```
+
+⚠️ **IMPORTANTE**: Nunca incluyas el archivo `.env` en repositorios públicos. Añádelo a tu `.gitignore`.
+
+## Uso del Módulo
+
+### Crear Eventos y Entradas
+
+1. Ve a Eventos > Eventos > Crear
+2. Configura la información del evento (nombre, fechas, ubicación)
+3. Define los tipos de entradas disponibles
+4. Publica el evento si deseas que esté disponible en el sitio web
+
+### Registrar Asistentes
+
+- **Manual**: Añade asistentes desde el backoffice (Eventos > Eventos > [Tu Evento] > Asistentes)
+- **Automático**: Los usuarios pueden registrarse desde el sitio web si el evento está publicado
+
+### Tickets y Códigos QR
+
+- Los tickets con códigos QR se generan automáticamente para cada registro
+- Puedes enviarlos por correo, descargarlos como PDF o imprimirlos
+- Cada código QR contiene un identificador único para el registro
+
+### Validación de Entradas
+
+#### Mediante API XML-RPC
+
+```python
+import xmlrpc.client
+
+url = 'https://tu-odoo.com'
+db = 'nombre-bd'
+username = 'usuario'
+password = 'contraseña'
+
+# Autenticación
+common = xmlrpc.client.ServerProxy(f'{url}/xmlrpc/2/common')
+uid = common.authenticate(db, username, password, {})
+
+# Llamada al método de validación
+models = xmlrpc.client.ServerProxy(f'{url}/xmlrpc/2/object')
+result = models.execute_kw(
+    db, uid, password,
+    'event.registration', 'check_registration_by_qr',
+    ['REGISTRATION:123']  # Datos del QR escaneado
+)
+
+print(result)
+# Resultado: {'status': 'ok', 'message': 'Entrada validada correctamente', ...}
 ```
 
-Al instalar o actualizar el módulo `fasticket`, el `post_init_hook` leerá estas variables de entorno y configurará el servidor de correo saliente en Odoo automáticamente.
+#### Desde Frontend (Ejemplo con JavaScript)
 
-## Uso
+```javascript
+async function validarQR(qrData) {
+    try {
+        const response = await fetch('/api/validate-ticket', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ qr_data: qrData })
+        });
+        
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Error validando ticket:', error);
+    }
+}
+```
 
-1.  Crea un nuevo evento desde el módulo de Eventos de Odoo.
-2.  Configura los tipos de entradas para el evento.
-3.  Cuando un asistente se registre (manualmente o a través del sitio web), se creará un registro en `event.registration`.
-4.  Puedes imprimir el ticket con el QR desde el registro del asistente.
-5.  Utiliza el método XML-RPC `validate_qr_code` del modelo `event.registration` para validar las entradas escaneando el QR.
+## Solución de Problemas
+
+### Correos no enviados
+
+Si los correos quedan en estado "saliente" pero no se envían:
+1. Verifica la configuración SMTP (servidor, puerto, credenciales)
+2. Comprueba que el trabajo programado "Enviar correos pendientes" esté activo
+3. Para envío inmediato, modifica la frecuencia del cron job o implementa envío forzado
+
+### Errores en la generación de QR
+
+1. Asegúrate de que la dependencia `qrcode` está instalada correctamente
+2. Verifica los permisos de escritura en el directorio temporal
+
+## Contribuciones
+
+Las contribuciones son bienvenidas. Para contribuir:
+
+1. Haz un fork del repositorio
+2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Haz commit de tus cambios (`git commit -m 'Añadir nueva funcionalidad'`)
+4. Haz push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+---
+
+Desarrollado por [Arthur](https://github.com/Arrcturus)
