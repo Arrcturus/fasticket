@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Reestructurada para usar web.html_container y web.external_layout -->
         <template id="fasticket_event_registration_report_template_badge">
             <!-- Llama al contenedor HTML base -->
             <t t-call="web.html_container">
@@ -9,10 +8,8 @@
                 <t t-foreach="docs" t-as="attendee">
                     <!-- Llama al layout externo estándar (añade cabecera/pie de página de la compañía) -->
                     <t t-call="web.external_layout">
-                        <!-- El contenido específico de tu informe va dentro de div.page -->
+                        <!-- El contenido específico del informe va dentro de div.page -->
                         <div class="page">
-                            <!-- Puedes añadir un título si quieres -->
-                            <!-- <h2>Event Ticket</h2> -->
 
                             <!-- Contenido original del ticket adaptado -->
                             <div class="o_event_registration_badge">
@@ -27,12 +24,6 @@
                                                 <span t-field="attendee.event_id.address_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}'/>
                                             </h5>
                                         </div>
-                                        <!-- El logo de la compañía ya suele estar en web.external_layout -->
-                                        <!-- <div class="col-6 text-right">
-                                            <img t-if="attendee.event_id.company_id.logo"
-                                                 t-att-src="image_data_uri(attendee.event_id.company_id.logo)"
-                                                 style="max-height: 100px; max-width: 180px;" alt="Company Logo"/>
-                                        </div> -->
                                     </div>
                                 </div>
 
